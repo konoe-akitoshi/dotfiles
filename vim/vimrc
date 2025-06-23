@@ -1,0 +1,131 @@
+set nocompatible
+filetype plugin indent on
+syntax enable
+
+set encoding=utf8
+scriptencoding utf8
+set fileencodings=utf-8,ucs-boms,euc-jp,ep932
+set fileformat=unix
+set fileformats=unix,dos,mac
+
+if empty($XDG_CACHE_HOME)
+  let $XDG_CACHE_HOME = expand('~/.cache')
+endif
+
+" jetpack
+if executable('git')
+  let g:jetpack_download_method = 'git'
+else
+  let g:jetpack_download_method = 'curl'
+endif
+let s:jetpackfile = expand($XDG_CACHE_HOME .. '/vim/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim')
+let s:jetpackurl = "https://raw.githubusercontent.com/tani/vim-jetpack/master/plugin/jetpack.vim"
+if !filereadable(s:jetpackfile)
+  call system(printf('curl -fsSLo %s --create-dirs %s', s:jetpackfile, s:jetpackurl))
+endif
+execute 'set packpath+=' .. expand($XDG_CACHE_HOME .. '/vim')
+
+" カーソルの形
+if has('vim_starting')
+  let &t_SI .= "\e[6 q"
+  let &t_EI .= "\e[2 q"
+  let &t_SR .= "\e[4 q"
+endif
+
+" 日本語ヘルプを優先
+set helplang=ja,en
+
+" 曖昧文字幅の幅を1に
+set ambiwidth=single
+
+" BOMを消す
+set nobomb
+
+" 編集中のファイルが他で書き換えられたら自動で読み直す
+set autoread
+
+" ヤンクをクリップボードへ繋ぐ
+set clipboard+=unnamed
+
+" ビープ音を消す
+set belloff=all
+
+" スワップファイルを生成しない
+set noswapfile
+
+" true color
+set termguicolors
+
+" 保存するコマンド履歴の数
+set history=1000
+
+" モードのメッセージをコマンドラインに表示しない
+set noshowmode
+
+" 現在行のハイライトを有効
+set cursorline
+
+" インクリメンタル検索を有効
+set incsearch
+
+" マウスを有効に
+set mouse=a
+
+" 行末の1文字先までカーソルを移動可能に
+set virtualedit=onemore
+
+" カーソル移動の行等行末の扱い
+set whichwrap=b,s,<,>,~,[,]
+
+" インサートモードでの<BS>, <Del>の扱い
+set backspace=indent,eol,start
+
+" どこでも短形ビジュアルモード
+set virtualedit=block
+
+" 行の折り返しを無効に
+set nowrap
+
+" 画面の左右の端でスクロールが発生した場合、何文字ずつスクロールするか
+set sidescroll=1
+
+" 全角カッコペアの追加
+set matchpairs+=（:）,「:」,『:』,【:】,［:］,＜:＞
+
+" スクロールの余裕
+set scrolloff=3
+set sidescrolloff=5
+
+" インデント設定
+set expandtab
+set tabstop=2
+set shiftwidth=0    " use 'tabstop' value
+set softtabstop=-1  " use 'shiftwidth' value
+set autoindent
+set smartindent
+
+" 検索パターンにおいて大文字と小文字を区別しない
+set ignorecase
+
+" <Leader>、`'`で囲うとダメみたい
+let mapleader = "\<Space>"
+
+" インデントを考慮したインサート
+nnoremap <expr> i len(getline('.')) !=# 0 ? 'i' : '"_cc'
+nnoremap <expr> a len(getline('.')) !=# 0 ? 'a' : '"_cc'
+nnoremap <expr> A len(getline('.')) !=# 0 ? 'A' : '"_cc'
+nnoremap <expr> I len(getline('.')) !=# 0 ? 'I' : '"_cc'
+
+" プラグイン
+packadd vim-jetpack
+let g:jetpack_njobs = 1
+call jetpack#begin(expand($XDG_CACHE_HOME .. '/vim'))
+Jetpack 'tani/vim-jetpack', {'opt': 1}
+Jetpack 'vim-jp/vimdoc-ja'
+Jetpack 'lambdalisue/vim-fern'
+Jetpack 'tomasiser/vim-code-dark'
+call jetpack#end()
+
+colorscheme codedark
+
+set secure

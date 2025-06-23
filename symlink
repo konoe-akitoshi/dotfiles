@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+ln_dots() {
+  local from_path to_path
+  from_path="$HOME/dotfiles/$1"
+  to_path="$2"
+  if [ ! -e "$from_path" ]; then
+    echo "Error: $from_path does not exist."
+    return 1
+  fi
+  mkdir -p "$(dirname "$to_path")"
+  ln -sfnv "$from_path" "$to_path"
+}
+
+# zsh
+ln_dots zsh/zshrc          ~/.zshrc
+ln_dots zsh/zshenv         ~/.zshenv
+
+# neovim/ideavim
+ln_dots vim/vimrc      ~/.config/vim/vimrc
+
+# tmux
+#ln_dots tmux/tmux.conf ~/.config/tmux/tmux.conf
